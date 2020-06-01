@@ -22,9 +22,9 @@ def prepare(module, options):
         return False
 
     # FIXME the driver is for L4 only
-    if device.identifier["family"] not in ["l4"]:
+    if device.identifier["family"] not in ["f3", "l4"]:
         return False
-    if device.identifier["name"] not in ["12", "22", "31", "32", "33", "42", "43", "51", "52", "62", "75", "76", "86", "96", "A6"]:
+    if device.identifier["family"] in ["l4"] and device.identifier["name"] not in ["12", "22", "31", "32", "33", "42", "43", "51", "52", "62", "75", "76", "86", "96", "A6"]:
         return False
 
     module.depends(":cmsis:device", ":platform:rcc")
@@ -47,8 +47,14 @@ def build(env):
         max_channels = 0
         for channel in channels["channel"]:
             max_channels = channel["position"]
-            for request in channel["request"]:
-                for signal in request["signal"]:
+            if "request" in channel:
+                for request in channel["request"]:
+                    for signal in request["signal"]:
+                        if "name" in signal:
+                            signal_name = signal["name"].capitalize()
+                            signal_names[signal_name] = 1
+            else:
+                for signal in channel["signal"]:
                     if "name" in signal:
                         signal_name = signal["name"].capitalize()
                         signal_names[signal_name] = 1
