@@ -225,6 +225,7 @@ public:
 		{
 			transferComplete = irqHandler;
 		}
+{% if "family" == "l4" -%}
 		/**
 		 * Set the peripheral that operates the channel
 		 */
@@ -236,6 +237,7 @@ public:
 			DMA_REQ->CSELR &= ~(0x0f << (uint32_t(ChannelID) * 4));
 			DMA_REQ->CSELR |= uint32_t(dmaRequest) << (uint32_t(ChannelID) * 4);
 		}
+{%- endif %}
 
 		/**
 		 * IRQ handler of the DMA channel
@@ -351,6 +353,7 @@ public:
  */
 %% for channels in dma["channels"]
 	%% for channel in channels.channel
+        %% if  "reguest" in channel
 		%% for request in channel.request
 			%% for signal in request.signal
 				%% set peripheral = signal.driver.capitalize()
@@ -372,6 +375,7 @@ struct DmaController<{{ channels.instance }}>::Channel<DmaBase::Channel::Channel
 
 			%% endfor
 		%% endfor
+        %% endif
 	%% endfor
 %% endfor
 
