@@ -36,8 +36,12 @@ main() {
       dmaHal::PeripheralIncrementMode::Fixed,
       dmaHal::Priority::Medium,
       dmaHal::CircularMode::Enabled);
-  channel5::setMemoryAddress(srcAr.data());
+  uintptr_t source = reinterpret_cast<uintptr_t>(srcAr.data());
+  channel5::setMemoryAddress(source);
+  uintptr_t destination = reinterpret_cast<uintptr_t>(&(TIM1->DMAR));
+  channel5::setPeripheralAddress(destination);
   channel5::setDataLength(srcAr.size());
+  //channel5::enableInterrupt(dmaHal::Interrupt::TransferComplete);
 
   // initialize the timer
   // connect timer and dma
