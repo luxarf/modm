@@ -113,7 +113,7 @@ jobs:
       - run:
           name: Examples STM32G4 Series
           command: |
-            (cd examples && ../tools/scripts/examples_compile.py nucleo_g474re)
+            (cd examples && ../tools/scripts/examples_compile.py nucleo_g474re nucleo_g431rb)
 
   stm32f4-examples:
     docker:
